@@ -41,11 +41,11 @@ public class SinVoiceRecognition implements Record.Listener, Record.Callback,
 	private int mMaxCodeIndex;
 
 	public static interface Listener {
-		void onRecognitionStart();
+		void onRecognitionStart(int startToken);
 
 		void onRecognition(char ch);
 
-		void onRecognitionEnd();
+		void onRecognitionEnd(int stopToken);
 	}
 
 	public SinVoiceRecognition() {
@@ -211,14 +211,14 @@ public class SinVoiceRecognition implements Record.Listener, Record.Callback,
 	}
 
 	@Override
-	public void onRecognition(int index) {
-		LogHelper.d(TAG, "zzzzzzzzzzzzzrecognition:" + index);
+	public void onRecognition(int index) {//识别过程,检查token，index是什么？？
+		LogHelper.d(TAG, "recognition-ing:" + index);
 		if (null != mListener) {
-			if (Common.START_TOKEN == index) {
-				mListener.onRecognitionStart();
-			} else if (Common.STOP_TOKEN == index) {
-				mListener.onRecognitionEnd();
-			} else if (index > 0 && index <= mMaxCodeIndex) {
+			if (Common.START_TOKEN == index) {//识别开始
+				mListener.onRecognitionStart(Common.START_TOKEN);
+			} else if (Common.STOP_TOKEN == index) {//识别结束
+				mListener.onRecognitionEnd(Common.STOP_TOKEN);
+			} else if (index > 0 && index <= mMaxCodeIndex) {//识别过程中
 				mListener.onRecognition(mCodeBook.charAt(index - 1));
 			}
 		}

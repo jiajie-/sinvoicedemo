@@ -128,6 +128,7 @@ public class VoiceRecognition {
 
 	/**
 	 * 识别的主要函数
+	 * 根据token来判断是否解码成功
 	 * @param data
 	 */
 	private void process(BufferData data) {

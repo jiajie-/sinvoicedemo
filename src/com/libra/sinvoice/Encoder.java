@@ -28,7 +28,7 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
 	// index 0, 1, 2, 3, 4, 5, 6
 	// circleCount 31, 28, 25, 22, 19, 15, 10
 	private final static int[] CODE_FREQUENCY = { 1422, 1575, 1764, 2004, 2321,
-			2940, 3675 ,4410 };//频率,分别代表 0 ~ 6
+			2940, 4410 };//频率,分别代表 0 ~ 6
 	private int mState;
 
 	private SinGenerator mSinGenerator;

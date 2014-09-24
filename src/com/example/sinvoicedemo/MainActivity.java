@@ -25,6 +25,8 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
     private Handler mHanlder;
     private SinVoicePlayer mSinVoicePlayer;
     private SinVoiceRecognition mRecognition;
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,13 +79,15 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
 
     
     /**
-     * 随机生成count位数
+     * 随机生成count位数,
+     * 6位数，前后加token，验证时根据token判断
      * @param count
      * @return
      */
     private String genText(int count) {
     	
         StringBuilder sb = new StringBuilder();
+//        sb.append("4");
         int pre = 0;
         while (count > 0) {
             int x = (int) (Math.random() * MAX_NUMBER + 1);
@@ -93,6 +97,7 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
                 pre = x;
             }
         }
+//        sb.append("2");
 
         return sb.toString();
     }
@@ -108,20 +113,37 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MSG_SET_RECG_TEXT:
+            case MSG_SET_RECG_TEXT://正在设置识别的字符
                 char ch = (char) msg.arg1;
                 mTextBuilder.append(ch);
                 if (null != mRecognisedTextView) {
+                	//最终的识别结果
                     mRecognisedTextView.setText(mTextBuilder.toString());
                 }
                 break;
 
-            case MSG_RECG_START:
+            case MSG_RECG_START://识别开始，删除旧数据
                 mTextBuilder.delete(0, mTextBuilder.length());
+                LogHelper.d(TAG, "recognition start:"+" msg.arg1:"+msg.arg1);
                 break;
 
-            case MSG_RECG_END:
-                LogHelper.d(TAG, "recognition end");
+            case MSG_RECG_END://识别结束,检查结果
+                LogHelper.d(TAG, "recognition end:"+" msg.arg1:"+msg.arg1);
+                LogHelper.d(TAG, "result "+mTextBuilder.toString());
+                
+//                if ((mTextBuilder.toString()).startsWith("4") && (mTextBuilder.toString()).endsWith("2")) {
+//                	LogHelper.d(TAG, "识别成功 ："+mTextBuilder.toString());
+//				}else {
+//					LogHelper.d(TAG, "识别失败 ："+mTextBuilder.toString());
+//				}
+                if (msg.arg1 == 6) {
+                	LogHelper.d(TAG, "识别成功 ："+mTextBuilder.toString());
+				} else {
+					LogHelper.d(TAG, "识别失败 ："+mTextBuilder.toString());
+				}
+                
+                
+                
                 break;
             }
             super.handleMessage(msg);
@@ -129,18 +151,21 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
     }
 
     @Override
-    public void onRecognitionStart() {
-        mHanlder.sendEmptyMessage(MSG_RECG_START);
+    public void onRecognitionStart(int token) {//识别开始
+//        mHanlder.sendEmptyMessage(MSG_RECG_START);
+    	mHanlder.sendMessage(mHanlder.obtainMessage(MSG_RECG_START, token, 0));
     }
 
     @Override
-    public void onRecognition(char ch) {
+    public void onRecognition(char ch) {//正在识别字符
         mHanlder.sendMessage(mHanlder.obtainMessage(MSG_SET_RECG_TEXT, ch, 0));
     }
 
     @Override
-    public void onRecognitionEnd() {
-        mHanlder.sendEmptyMessage(MSG_RECG_END);
+    public void onRecognitionEnd(int token) {//识别结束
+//        mHanlder.sendEmptyMessage(MSG_RECG_END);
+    	mHanlder.sendMessage(mHanlder.obtainMessage(MSG_RECG_END, token, 0));
+        
     }
 
     @Override
