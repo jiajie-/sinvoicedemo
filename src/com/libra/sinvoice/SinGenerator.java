@@ -95,6 +95,11 @@ public class SinGenerator {
 		}
 	}
 
+	/**
+	 * 生成音频的主要过程
+	 * @param genRate
+	 * @param duration
+	 */
 	public void gen(int genRate, int duration) {
 		if (STATE_START == mState) {
 			mGenRate = genRate;

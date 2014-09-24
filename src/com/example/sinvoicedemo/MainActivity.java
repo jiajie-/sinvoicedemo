@@ -75,7 +75,14 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
         });
     }
 
+    
+    /**
+     * 随机生成count位数
+     * @param count
+     * @return
+     */
     private String genText(int count) {
+    	
         StringBuilder sb = new StringBuilder();
         int pre = 0;
         while (count > 0) {

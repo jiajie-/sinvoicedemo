@@ -26,7 +26,7 @@ public class VoiceRecognition {
 	private final static int STATE_STEP2 = 2;
 	private final static int INDEX[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, 6, -1, -1, -1, -1, 5, -1, -1, -1, 4, -1, -1, 3, -1, -1, 2, -1,
-			-1, 1, -1, -1, 0 };
+			-1, 1, -1, -1, 0 };//解码时用
 	private final static int MAX_CIRCLE = 31;
 	private final static int MIN_CIRCLE = 10;
 
@@ -126,6 +126,10 @@ public class VoiceRecognition {
 		}
 	}
 
+	/**
+	 * 识别的主要函数
+	 * @param data
+	 */
 	private void process(BufferData data) {
 		int size = data.getFilledSize() - 1;
 		short sh = 0;
